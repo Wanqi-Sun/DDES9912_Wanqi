@@ -11,6 +11,11 @@ public class GearRotate : MonoBehaviour
     [Tooltip("在世界坐标绕轴转更直观，除非你要跟随局部旋转")]
     public Space space = Space.World; // 或 Space.Self
 
+    void Start()
+    {
+        // 开始游戏时禁用脚本，等待按钮启动
+        this.enabled = false;
+    }
     void Update()
     {
         transform.Rotate(axis, speedDegPerSec * Time.deltaTime, space);

@@ -6,6 +6,12 @@ public class ClockHands : MonoBehaviour
     public Transform pivotMinute;
     public Transform pivotSecond;
 
+    void Start()
+    {
+        // 开始游戏时禁用脚本，等待按钮启动
+        this.enabled = false;
+    }
+
     void Update()
     {
         var t = System.DateTime.Now;
