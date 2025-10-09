@@ -2,24 +2,25 @@ using UnityEngine;
 
 public class ClockManager : MonoBehaviour
 {
-    // 拖进所有你想控制的脚本（如齿轮、指针、摆锤的脚本组件）
     public MonoBehaviour[] controlScripts;
+    public AudioSource clockAudio;  // 拖入音效组件
 
-    // 启动钟表
     public void StartClock()
     {
         foreach (var script in controlScripts)
-        {
             script.enabled = true;
-        }
+
+        if (clockAudio != null && !clockAudio.isPlaying)
+            clockAudio.Play();
     }
 
-    // 停止钟表
     public void StopClock()
     {
         foreach (var script in controlScripts)
-        {
             script.enabled = false;
-        }
+
+        if (clockAudio != null && clockAudio.isPlaying)
+            clockAudio.Pause();  // 用 Pause 而不是 Stop，可保留播放进度
     }
 }
+
