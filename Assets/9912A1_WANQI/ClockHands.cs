@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class ClockHands : MonoBehaviour
 {
@@ -6,23 +7,60 @@ public class ClockHands : MonoBehaviour
     public Transform pivotMinute;
     public Transform pivotSecond;
 
-    void Awake()
+    private DateTime startTime;          // 启动时刻（用于计算）
+    private DateTime currentTime;        // 当前显示的时间
+    private bool isRunning = false;      // 控制是否旋转
+
+    // 手动设定时间
+    public void SetManualTime(int hour, int minute, int second)
     {
-        this.enabled = false;  // 提前禁用，防止 Update 提前运行
+        currentTime = new DateTime(1, 1, 1, hour % 24, minute % 60, second % 60);
+        ApplyRotation(currentTime);
+    }
+
+    // 启动使用系统时间开始运转
+    public void UseSystemTime()
+    {
+        startTime = DateTime.Now;
+        TimeSpan offset = currentTime.TimeOfDay;
+        currentTime = startTime.Date + offset;
+        isRunning = true;
+    }
+
+    // 停止指针旋转
+    public void StopSystemTime()
+    {
+        isRunning = false;
     }
 
     void Update()
     {
-        var t = System.DateTime.Now;
+        if (isRunning)
+        {
+            // 增加时间（用deltaTime累积）
+            currentTime = currentTime.AddSeconds(Time.deltaTime);
+            ApplyRotation(currentTime);
+        }
+    }
 
-        float zSec = -t.Second * 6f;
-        float zMin = -(t.Minute * 6f + t.Second * 0.1f);
-        float zHour = -((t.Hour % 12) * 30f + t.Minute * 0.5f);
+    // 根据时间设置指针角度
+    private void ApplyRotation(DateTime time)
+    {
+        float sec = time.Second + time.Millisecond / 1000f;
+        float min = time.Minute + sec / 60f;
+        float hour = (time.Hour % 12) + min / 60f;
+
+        float zSec = -sec * 6f;
+        float zMin = -min * 6f;
+        float zHour = -hour * 30f;
 
         pivotSecond.localRotation = Quaternion.Euler(0, 0, zSec);
         pivotMinute.localRotation = Quaternion.Euler(0, 0, zMin);
         pivotHour.localRotation = Quaternion.Euler(0, 0, zHour);
     }
 }
+
+
+
 
 
