@@ -9,6 +9,12 @@ public class ClockManager : MonoBehaviour
     [Header("Audio")]
     public AudioSource clockAudio;           // 拖入 Tick 声音
 
+    public GameObject GhostHead;       // 幽灵头
+    public GameObject HintPicture9;    // 恐怖照片9
+
+    public GhostHeadFollow ghostFollow;
+
+
     [Header("Time Input Panel UI")]
     public GameObject timeInputPanel;        // 拖入 TimeInputPanel
     public TMP_InputField hourInput;         // 拖入 HourInput (TMP)
@@ -40,6 +46,12 @@ public class ClockManager : MonoBehaviour
 
         if (clockAudio != null && !clockAudio.isPlaying)
             clockAudio.Play();
+
+        if (GhostHead != null)
+        GhostHead.SetActive(true);
+
+        if (HintPicture9 != null)
+        HintPicture9.SetActive(true);
     }
 
     // 点击 Stop 按钮
@@ -50,6 +62,11 @@ public class ClockManager : MonoBehaviour
 
         if (clockAudio != null && clockAudio.isPlaying)
             clockAudio.Pause();
+
+        if (ghostFollow != null)
+      {
+        ghostFollow.PlayStopHint();
+      }
     }
 
     // 点击 Set Time 按钮
